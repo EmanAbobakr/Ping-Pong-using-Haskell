@@ -24,7 +24,6 @@ data PongGame = Game
   , player1 :: Float           -- ^ Left player paddle height.
                                -- Zero is the middle of the screen. 
   , player2 :: Float           -- ^ Right player paddle height.
-  , playerIsMoving :: (Float, Float)
   } deriving Show
 
 
@@ -35,8 +34,11 @@ initialState = Game
   , ballVel = (1, -3)
   , player1 = 40
   , player2 = -80
-  , playerIsMoving = (0, 0)
   }
+
+-- | Number of frames to show per second.
+fps :: Int
+fps = 60
 
 
 -- | Convert a game state into a picture.
@@ -86,10 +88,6 @@ moveBall seconds game = game { ballLoc = (x', y') }
     y' = y + vy * seconds
 
 
--- | Number of frames to show per second.
-fps :: Int
-fps = 60
-
 
 type Radius = Float 
 type Position = (Float, Float)
@@ -132,12 +130,7 @@ handleKeys :: Event -> PongGame -> PongGame
 handleKeys (EventKey (Char 's') _ _ _) game =
   game { ballLoc = (0, 0) }
 
-handleKeys (EventKey (Char 'w') (Down) _ _) game =
-    game { playerIsMoving = ((fst $ playerIsMoving game), 100) }
-handleKeys (EventKey (Char 's') (Down) _ _) game =
-	game { playerIsMoving = ((fst $ playerIsMoving game), (-100)) }
-	
-	-- Do nothing for all other events.
+-- Do nothing for all other events.
 handleKeys _ game = game
 
 main :: IO ()
