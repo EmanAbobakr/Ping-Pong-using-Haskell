@@ -8,13 +8,13 @@ import Graphics.Gloss.Interface.Pure.Game
 width, height, offset :: Int
 width = 300
 height = 300
-offset = 100
+offset = 200
 
 window :: Display
 window = InWindow "Pong" (width, height) (offset, offset)
 
 background :: Color
-background = black
+background = white
 
 
 -- | Data describing the state of the pong game. 
@@ -27,11 +27,11 @@ data PongGame = Game
   } deriving Show
 
 
-    -- | The starting state for the game of Pong.
+-- | The starting state for the game of Pong.
 initialState :: PongGame
 initialState = Game
-  { ballLoc = (-10, 30)
-  , ballVel = (1, -3)
+  { ballLoc = (10, 100)
+  , ballVel = (0, 3)
   , player1 = 40
   , player2 = -80
   }
@@ -47,7 +47,9 @@ render :: PongGame  -- ^ The game state to render.
 render game =
   pictures [ball, walls,
             mkPaddle rose 120 $ player1 game,
-            mkPaddle orange (-120) $ player2 game]
+            mkPaddle orange (-120) $ player2 game,
+            translate 0 0 $ color ballColor $ circle 15,
+            translate 0 0 $ color ballColor $ rectangleSolid 1 300]
   where
     --  The pong ball.
     ball = uncurry translate (ballLoc game) $ color ballColor $ circleSolid 10
@@ -84,8 +86,8 @@ moveBall seconds game = game { ballLoc = (x', y') }
     (vx, vy) = ballVel game
 
     -- New locations.
-    x' = x + vx * seconds
-    y' = y + vy * seconds
+    x' = x + vx * seconds * 100
+    y' = y + vy * seconds * 100
 
 
 
