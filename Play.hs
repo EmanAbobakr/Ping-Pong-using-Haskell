@@ -77,8 +77,8 @@ type Position = (Float, Float)
 wallCollision :: Position -> Radius -> Bool 
 wallCollision (_, y) radius = topCollision || bottomCollision
   where
-    topCollision    = y - radius <= -fromIntegral width / 2 
-    bottomCollision = y + radius >=  fromIntegral width / 2
+    topCollision    = y - radius <= -fromIntegral height / 2 
+    bottomCollision = y + radius >=  fromIntegral height / 2
 
 
 wallBounce :: PongGame -> PongGame
