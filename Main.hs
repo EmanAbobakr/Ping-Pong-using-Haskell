@@ -35,10 +35,12 @@ initialState :: PongGame
 initialState = Game
   { gamemode = Menu
   , wherefrom = Menu
-  , ballLoc = (10, 100)
-  , ballVel = (0, 3)
-  , player1 = 40
-  , player2 = -80
+  , ballLoc = (40, 0)
+  , ballVel = (-4, 0)
+  , player1 = 40    --right
+  , player2 = 60      --left
+  , score1  = 0
+  , score2  = 0
   }
 
 

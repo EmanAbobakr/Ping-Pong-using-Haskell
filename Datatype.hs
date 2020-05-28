@@ -14,8 +14,11 @@ data PongGame = Game
   , wherefrom :: GameMode
   , ballLoc :: (Float, Float)  --  Pong ball (x, y) location.
   , ballVel :: (Float, Float)  --  Pong ball (x, y) velocity. 
-  , player1 :: Float           --  Left player paddle height.                          
-  , player2 :: Float           --  Right player paddle height.
+  , player1 :: Float           --  Right player paddle height.                          
+  , player2 :: Float           --  left player paddle height.
+  , score1  :: Float		   --  Right player Score.
+  , score2  :: Float		   --  Left player Score.
+
   } deriving Eq
 
 -- | all possible game modes 

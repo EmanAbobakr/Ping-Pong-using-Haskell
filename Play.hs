@@ -3,12 +3,15 @@ import Graphics.Gloss
 import Graphics.Gloss.Interface.Pure.Game
 import DataType
 import Graphics.Gloss.Data.ViewPort
+import Data.Char
+import Data.List
 
+type WordNum = String
 
 
 -- Update the game by moving the ball and bouncing off walls. (function composition)
 updatePlay ::  Float -> PongGame -> PongGame
-updatePlay  seconds = wallBounce . moveBall seconds
+updatePlay  seconds =     wallBounce . moveBall seconds . paddleBounce . score
 
 
 -- | handle the playmode keys.
@@ -19,6 +22,20 @@ handlePlayKeys (EventKey (Char 'q') _ _ _) game  = game {gamemode = Menu}
 handlePlayKeys (EventKey (Char 'p') Down _ _) game = game {gamemode = Pause}
 handlePlayKeys evnent game = game
 
+ones ::  Float -> String
+ones 0 = "0"
+ones 1 = "1"
+ones 2 = "2"
+ones 3 = "3"
+ones 4 = "4"
+ones 5 = "5"
+ones 6 = "6"
+ones 7 = "7"
+ones 8 = "8"
+ones 9 = "9"
+ones 10 = "10"
+ones _  = "!!"
+
 
 -- | Convert a game state into a picture.
 renderPlay :: PongGame  -- ^ The game state to render.
@@ -28,11 +45,18 @@ renderPlay game =
             mkPaddle rose (fromIntegral width / 2 - 15) $ player1 game,
             mkPaddle orange (fromIntegral (-width) / 2 + 15) $ player2 game,
             translate 0 0 $ color ballColor $ circle 15,
-            translate 0 0 $ color ballColor $ rectangleSolid 1 (fromIntegral height)]
+            translate 0 0 $ color ballColor $ rectangleSolid 1 (fromIntegral height),
+            scale (0.3) (0.3) (translate (800) (1000) $ color rose (text  num1)),
+            scale (0.3) (0.3) (translate (-1300) (1000) $ color orange (text  num2))
+
+            ]
   where
     --  The pong ball.
     ball = uncurry translate (ballLoc game) $ color ballColor $ circleSolid 15
     ballColor = dark red
+    num1 = "Player1:  " ++ ones (score1 game)
+    num2 = "Player2:  " ++ ones (score2 game)
+
 
     --  The bottom and top walls.
     wall :: Float -> Picture
@@ -80,11 +104,38 @@ wallCollision (_, y) radius = topCollision || bottomCollision
     topCollision    = y - radius <= -fromIntegral height / 2 
     bottomCollision = y + radius >=  fromIntegral height / 2
 
+score :: PongGame -> PongGame
+score game = game { ballLoc = (x', y'), score2=s2', score1=s1'}
+  where
+    s1 = score1 game
+    s2 = score2 game
+    (x, y) = ballLoc  game
+    s2' = if (x >= 600)
+          then
+             s2+1
+           else
+            s2
+    s1' = if (x <= -600)
+          then
+             s1+1
+           else
+            s1
+
+    x' = if (x >= 600 || x<= -600)
+          then
+             0
+           else
+            x
+    y' = if (x >= 600 || x<= -600)
+          then
+             0
+           else
+            y
+ 
 
 wallBounce :: PongGame -> PongGame
 wallBounce game = game { ballVel = (vx, vy') }
   where
-    -- Radius. Use the same thing as in `render`.
     radius = 10
 
     -- The old velocities.
@@ -99,3 +150,27 @@ wallBounce game = game { ballVel = (vx, vy') }
             vy
 
 
+
+paddleCollision :: Position -> Float -> Float -> Radius -> Bool 
+paddleCollision (x, y) p1 p2 radius = leftCollision || rightCollision
+  where
+    leftCollision  = (x + radius <= -fromIntegral (width-80) / 2) && (y >= (p2 - 50)  && y <= (p2 + 50))
+    rightCollision = (x - radius >= fromIntegral (width-80) / 2) && (y >= (p1 - 50)  && y <= (p1 + 50))
+
+
+paddleBounce :: PongGame -> PongGame
+paddleBounce game = game { ballVel = (vx', vy) }
+  where
+    -- Radius. Use the same thing as in `render`.
+    radius = 10
+
+    -- The old velocities.
+    (vx, vy) = ballVel game
+
+    vx' = if paddleCollision (ballLoc game) (player1 game) (player2 game) radius
+          then
+             -- Update the velocity.
+             -vx
+           else
+            -- Do nothing. Return the old velocity.
+            vx
