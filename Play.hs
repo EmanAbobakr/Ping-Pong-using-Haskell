@@ -13,7 +13,7 @@ type WordNum = String
 updatePlay ::  Float -> PongGame -> PongGame
 updatePlay  seconds = wallBounce . moveBall seconds . paddleBounce . checkWinner . score 
 
--- 
+-- check if there is a winner
 checkWinner:: PongGame -> PongGame
 checkWinner game 
                 | (score1 game) > 21 = game {gamemode = Endgame}

@@ -25,12 +25,12 @@ endRender game = color black (pictures
  ])
  where winner = getWinner game
 
--- To who is the winner
+-- To determine who is the winner
 getWinner :: PongGame -> String
 getWinner game 
               | (score1 game) > 21 = "Player 1"
               | otherwise          = "Player 2"
-
+-- To get player Color
 choseColor :: String -> Color
 choseColor "Player 1" = rose
 choseColor _          = orange
