@@ -118,8 +118,8 @@ type Position = (Float, Float)
 wallCollision :: Position -> Radius -> Bool 
 wallCollision (_, y) radius = topCollision || bottomCollision
   where
-    topCollision    = y - radius <= -fromIntegral height / 2 
-    bottomCollision = y + radius >=  fromIntegral height / 2
+    topCollision    = y - radius <= -fromIntegral height / 2 +12
+    bottomCollision = y + radius >=  fromIntegral height / 2 -12
 
 score :: PongGame -> PongGame
 score game = game { ballLoc = (x', y'), score2=s2', score1=s1'}
@@ -172,8 +172,8 @@ wallBounce game = game { ballVel = (vx, vy') }
 paddleCollision :: Position -> Float -> Float -> Radius -> Bool 
 paddleCollision (x, y) p1 p2 radius = leftCollision || rightCollision
   where
-    leftCollision  = (x + radius <= -fromIntegral (width-80) / 2) && (y >= (p2 - 50)  && y <= (p2 + 50))
-    rightCollision = (x - radius >= fromIntegral (width-80) / 2) && (y >= (p1 - 50)  && y <= (p1 + 50))
+    leftCollision  = (x - radius <= -fromIntegral (width-80) / 2) && (y >= (p2 - 50)  && y <= (p2 + 50))
+    rightCollision = (x + radius >= fromIntegral (width-80) / 2) && (y >= (p1 - 50)  && y <= (p1 + 50))
 
 
 paddleBounce :: PongGame -> PongGame
