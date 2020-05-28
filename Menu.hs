@@ -19,7 +19,7 @@ menuRender game = color black (pictures
    translate (-300) 200 (text "Ping Pong"),
    translate (-300) 110 (text "-------"),
    scale (0.5) (0.5) (translate (-450) (-50) (text "(1) To Play")),
-   scale (0.5) (0.5) (translate (-450) (-250) (text "(q) To go to MENU")),
+   scale (0.5) (0.5) (translate (-450) (-250) (text "(q) back to MENU")),
    scale (0.5) (0.5) (translate (-450) (-450) (text "(P) To Pause"))
 
  ])

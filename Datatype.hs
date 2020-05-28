@@ -6,7 +6,7 @@ import Graphics.Gloss
 width, height, offset:: Int
 width = 1000
 height = 700
-offset = 100
+offset = 0
 
 -- | Data describing the state of the pong game. 
 data PongGame = Game
@@ -16,8 +16,8 @@ data PongGame = Game
   , ballVel :: (Float, Float)  --  Pong ball (x, y) velocity. 
   , player1 :: Float           --  Right player paddle height.                          
   , player2 :: Float           --  left player paddle height.
-  , score1  :: Float		   --  Right player Score.
-  , score2  :: Float		   --  Left player Score.
+  , score1  :: Float           --  Right player Score.
+  , score2  :: Float           --  Left player Score.
 
   } deriving Eq
 

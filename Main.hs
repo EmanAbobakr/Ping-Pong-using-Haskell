@@ -36,9 +36,9 @@ initialState = Game
   { gamemode = Menu
   , wherefrom = Menu
   , ballLoc = (40, 0)
-  , ballVel = (-4, 0)
+  , ballVel = (4, 0)
   , player1 = 40    --right
-  , player2 = 60      --left
+  , player2 = 80      --left
   , score1  = 0
   , score2  = 0
   }
