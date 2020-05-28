@@ -22,4 +22,4 @@ data PongGame = Game
   } deriving Eq
 
 -- | all possible game modes 
-data GameMode = Menu | Pause | EndGame | Play deriving Eq  -- deriving Eq so the gamemodes will be comparable
+data GameMode = Menu | Pause | Endgame | Play deriving Eq  -- deriving Eq so the gamemodes will be comparable

@@ -11,7 +11,14 @@ type WordNum = String
 
 -- Update the game by moving the ball and bouncing off walls. (function composition)
 updatePlay ::  Float -> PongGame -> PongGame
-updatePlay  seconds =     wallBounce . moveBall seconds . paddleBounce . score
+updatePlay  seconds = wallBounce . moveBall seconds . paddleBounce . checkWinner . score 
+
+-- 
+checkWinner:: PongGame -> PongGame
+checkWinner game 
+                | (score1 game) > 21 = game {gamemode = Endgame}
+                | (score2 game) > 21 = game {gamemode = Endgame}
+                | otherwise = game 
 
 
 -- | handle the playmode keys.
@@ -34,7 +41,18 @@ ones 7 = "7"
 ones 8 = "8"
 ones 9 = "9"
 ones 10 = "10"
-ones _  = "!!"
+ones 11 = "1 up"
+ones 12 = "2 up"
+ones 13 = "3 up"
+ones 14 = "4 up"
+ones 15 = "5 up"
+ones 16 = "6 up"
+ones 17 = "7 up"
+ones 18 = "8 up"
+ones 19 = "9 up"
+ones 20 = "Last"
+ones 21 = "Game"
+ones _  = "End"
 
 
 -- | Convert a game state into a picture.
@@ -46,7 +64,7 @@ renderPlay game =
             mkPaddle orange (fromIntegral (-width) / 2 + 15) $ player2 game,
             translate 0 0 $ color ballColor $ circle 15,
             translate 0 0 $ color ballColor $ rectangleSolid 1 (fromIntegral height),
-            scale (0.3) (0.3) (translate (800) (1000) $ color rose (text  num1)),
+            scale (0.3) (0.3) (translate (600) (1000) $ color rose (text  num1)),
             scale (0.3) (0.3) (translate (-1300) (1000) $ color orange (text  num2))
 
             ]
@@ -54,9 +72,9 @@ renderPlay game =
     --  The pong ball.
     ball = uncurry translate (ballLoc game) $ color ballColor $ circleSolid 15
     ballColor = dark red
-    num1 = "Player1:  " ++ ones (score1 game)
-    num2 = "Player2:  " ++ ones (score2 game)
-
+    -- 
+    num1 = "Player1: " ++ ones (score1 game)
+    num2 = "Player2: " ++ ones (score2 game)
 
     --  The bottom and top walls.
     wall :: Float -> Picture
@@ -76,7 +94,6 @@ renderPlay game =
       ]
 
     paddleColor = light (light blue)
-
 
 -- | Update the ball position using its current velocity.
 moveBall :: Float    -- ^ The number of seconds since last update
@@ -132,7 +149,8 @@ score game = game { ballLoc = (x', y'), score2=s2', score1=s1'}
            else
             y
  
-
+  
+            
 wallBounce :: PongGame -> PongGame
 wallBounce game = game { ballVel = (vx, vy') }
   where

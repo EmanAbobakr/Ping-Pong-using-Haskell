@@ -1,6 +1,7 @@
 module Main(main) where
 import DataType
 import Play
+import End
 import Pause
 import Menu
 import Graphics.Gloss
@@ -9,7 +10,7 @@ import Graphics.Gloss.Interface.Pure.Game
 --import data
 
 window :: Display
-window = InWindow "Pong" (width, height) (offset, offset)
+window = InWindow "Ping Pong" (width, height) (offset, offset)
 
 background :: Color
 background = white
@@ -49,13 +50,15 @@ render :: PongGame -> Picture
 render game 
             | (gamemode game) == Menu = menuRender game
             | (gamemode game) == Pause = pauseRender game
+            | (gamemode game) == Endgame = endRender game
             | otherwise = renderPlay game
 
             -- | Handle the key events according to the Game Mode.
 handleKeys :: Event -> PongGame -> PongGame   -- Event -> currentGame -> updatedGame
 handleKeys event game 
                     | (gamemode game) == Menu = handleMenuKeys event game  
-                    | (gamemode game) == Pause = handlePauseKeys event game        
+                    | (gamemode game) == Pause = handlePauseKeys event game
+                    | (gamemode game) == Endgame = handleEndKeys event game 
                     | otherwise = handlePlayKeys event game
 
 
@@ -63,6 +66,7 @@ update :: Float -> PongGame -> PongGame
 update seconds game 
                 | (gamemode game) == Menu = updateMenu seconds game initialState
                 | (gamemode game) == Pause = updatePause seconds game
+                | (gamemode game) == Endgame = updateEnd seconds game
                 | otherwise = updatePlay seconds game
 
 

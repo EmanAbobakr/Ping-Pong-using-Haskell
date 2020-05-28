@@ -16,10 +16,10 @@ handleMenuKeys _ game = game
 menuRender :: PongGame -> Picture
 menuRender game = color black (pictures
  [
-   translate (-300) 200 (text "Ping Pong"),
-   translate (-300) 110 (text "-------"),
-   scale (0.5) (0.5) (translate (-450) (-50) (text "(1) To Play")),
-   scale (0.5) (0.5) (translate (-450) (-250) (text "(q) back to MENU")),
-   scale (0.5) (0.5) (translate (-450) (-450) (text "(P) To Pause"))
+   translate (-400) 200 (text "Ping Pong"),
+   translate (-400) 110 (text "-------"),
+   scale (0.5) (0.5) (translate (-550) (-50) (text "(1) To Play")),
+   scale (0.5) (0.5) (translate (-550) (-250) (text "(q) Back to Menu")),
+   scale (0.5) (0.5) (translate (-550) (-450) (text "(p) To Pause"))
 
  ])
