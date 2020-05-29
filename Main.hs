@@ -38,8 +38,8 @@ initialState = Game
   , wherefrom = Menu
   , ballLoc = (40, 0)
   , ballVel = (3, 1)
-  , player1 = 140    --right
-  , player2 = 80      --left
+  , player1 = 100    --right
+  , player2 = -100      --left
   , score1  = 0
   , score2  = 0
   }

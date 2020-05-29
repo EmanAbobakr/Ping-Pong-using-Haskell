@@ -27,6 +27,10 @@ handlePlayKeys::Event->PongGame->PongGame
 handlePlayKeys (EventKey (Char 'r') Down _ _) game = game { ballLoc = (0, 0) }
 handlePlayKeys (EventKey (Char 'q') _ _ _) game  = game {gamemode = Menu}
 handlePlayKeys (EventKey (Char 'p') Down _ _) game = game {gamemode = Pause}
+handlePlayKeys (EventKey (Char '8') _ _ _) game = game { player1 = (movePaddlePos (player1 game)) }
+handlePlayKeys (EventKey (Char '2') _ _ _) game = game { player1 = (movePaddleNeg (player1 game)) }
+handlePlayKeys (EventKey (Char 'w') _ _ _) game = game { player2 = (movePaddlePos (player2 game)) }
+handlePlayKeys (EventKey (Char 's') _ _ _) game = game { player2 = (movePaddleNeg (player2 game)) }
 handlePlayKeys evnent game = game
 
 ones ::  Float -> String
@@ -113,6 +117,27 @@ moveBall seconds game = game { ballLoc = (x', y') }
 
 type Radius = Float 
 type Position = (Float, Float)
+type PlayerPosition = Float
+
+-- move paddle
+movePaddlePos :: PlayerPosition -> Float
+movePaddlePos pos | wallCollisionPaddleBottom pos 43 = pos
+                  | otherwise = (pos + 25)
+
+movePaddleNeg :: PlayerPosition -> Float
+movePaddleNeg pos | wallCollisionPaddleTop pos 43 = pos
+                  | otherwise = (pos - 25)
+
+-- | Given height of the paddle, return whether a collision between paddle and wall occurred.
+wallCollisionPaddleTop :: PlayerPosition -> Float -> Bool 
+wallCollisionPaddleTop y paddleHeight = topCollision
+  where
+    topCollision    = y - paddleHeight <= -fromIntegral height / 2
+
+wallCollisionPaddleBottom :: PlayerPosition -> Float -> Bool 
+wallCollisionPaddleBottom y paddleHeight = bottomCollision
+  where 
+    bottomCollision = y + paddleHeight >=  fromIntegral height / 2
 
 -- | Given position and radius of the ball, return whether a collision occurred.
 wallCollision :: Position -> Radius -> Bool 
