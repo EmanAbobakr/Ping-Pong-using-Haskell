@@ -121,11 +121,11 @@ type PlayerPosition = Float
 
 -- move paddle
 movePaddlePos :: PlayerPosition -> Float
-movePaddlePos pos | wallCollisionPaddleBottom pos 43 = pos
+movePaddlePos pos | wallCollisionPaddleBottom pos 52 = pos
                   | otherwise = (pos + 25)
 
 movePaddleNeg :: PlayerPosition -> Float
-movePaddleNeg pos | wallCollisionPaddleTop pos 43 = pos
+movePaddleNeg pos | wallCollisionPaddleTop pos 52 = pos
                   | otherwise = (pos - 25)
 
 -- | Given height of the paddle, return whether a collision between paddle and wall occurred.
