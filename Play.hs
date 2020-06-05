@@ -24,7 +24,7 @@ checkWinner game
 -- | handle the playmode keys.
 handlePlayKeys::Event->PongGame->PongGame
 -- For an 's' keypress, reset the ball to the center.
-handlePlayKeys (EventKey (Char 'r') Down _ _) game = game { ballLoc = (0, 0) }
+handlePlayKeys (EventKey (Char 'r') Down _ _) game = resetGame game
 handlePlayKeys (EventKey (Char 'q') _ _ _) game  = game {gamemode = Menu}
 handlePlayKeys (EventKey (Char 'p') Down _ _) game = game {gamemode = Pause}
 handlePlayKeys (EventKey (SpecialKey KeyUp) _ _ _) game = game { player1 = (movePaddlePos (player1 game)) }
@@ -217,3 +217,7 @@ paddleBounce game = game { ballVel = (vx', vy) }
            else
             -- Do nothing. Return the old velocity.
             vx
+
+--Reset game
+resetGame :: PongGame -> PongGame
+resetGame game = game{ballLoc = (0, 0), score1  = 0, score2  = 0, player1 = 100, player2 = -100}
