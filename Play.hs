@@ -23,14 +23,21 @@ checkWinner game
 
 -- | handle the playmode keys.
 handlePlayKeys::Event->PongGame->PongGame
--- For an 's' keypress, reset the ball to the center.
+-- press 'r' to reset the game(scores/players pos/ball pos).
 handlePlayKeys (EventKey (Char 'r') Down _ _) game = resetGame game
-handlePlayKeys (EventKey (Char 'q') _ _ _) game  = game {gamemode = Menu}
+-- press 'q' to go back to the menu
+handlePlayKeys (EventKey (Char 'q') Down _ _) game  = game {gamemode = Menu}
+-- press 'p' to pause the game
 handlePlayKeys (EventKey (Char 'p') Down _ _) game = game {gamemode = Pause}
-handlePlayKeys (EventKey (SpecialKey KeyUp) _ _ _) game = game { player1 = (movePaddlePos (player1 game)) }
-handlePlayKeys (EventKey (SpecialKey KeyDown) _ _ _) game = game { player1 = (movePaddleNeg (player1 game)) }
-handlePlayKeys (EventKey (Char 'w') _ _ _) game = game { player2 = (movePaddlePos (player2 game)) }
-handlePlayKeys (EventKey (Char 's') _ _ _) game = game { player2 = (movePaddleNeg (player2 game)) }
+-- press the up key to move player1 to the up
+handlePlayKeys (EventKey (SpecialKey KeyUp) Down _ _) game = game { player1 = (movePaddleUp (player1 game)) }
+-- press the down key to move player1 to the down
+handlePlayKeys (EventKey (SpecialKey KeyDown) Down _ _) game = game { player1 = (movePaddleDown (player1 game)) }
+-- press the up'w' key to move player2 to the up
+handlePlayKeys (EventKey (Char 'w') Down _ _) game = game { player2 = (movePaddleUp (player2 game)) }
+-- press the 's' key to move player2 to the down
+handlePlayKeys (EventKey (Char 's') Down _ _) game = game { player2 = (movePaddleDown (player2 game)) }
+-- otherwise->do not change
 handlePlayKeys evnent game = game
 
 ones ::  Float -> String
@@ -116,31 +123,30 @@ moveBall seconds game = game { ballLoc = (x', y') }
 
 
 type Radius = Float 
-type Position = (Float, Float)
-type PlayerPosition = Float
+type BallVelocity = (Float, Float)
 
 -- move paddle
-movePaddlePos :: PlayerPosition -> Float
-movePaddlePos pos | wallCollisionPaddleBottom pos 52 = pos
-                  | otherwise = (pos + 25)
+movePaddleUp :: Float -> Float
+movePaddleUp pos | wallCollisionPaddleTop pos 52 = pos
+                  | otherwise = (pos + 40)
 
-movePaddleNeg :: PlayerPosition -> Float
-movePaddleNeg pos | wallCollisionPaddleTop pos 52 = pos
-                  | otherwise = (pos - 25)
+movePaddleDown :: Float -> Float
+movePaddleDown pos | wallCollisionPaddleBottom pos 52 = pos
+                  | otherwise = (pos - 40)
 
 -- | Given height of the paddle, return whether a collision between paddle and wall occurred.
-wallCollisionPaddleTop :: PlayerPosition -> Float -> Bool 
-wallCollisionPaddleTop y paddleHeight = topCollision
+wallCollisionPaddleTop :: Float -> Float -> Bool 
+wallCollisionPaddleTop y paddleHeight = bottomCollision
   where
-    topCollision    = y - paddleHeight <= -fromIntegral height / 2
-
-wallCollisionPaddleBottom :: PlayerPosition -> Float -> Bool 
-wallCollisionPaddleBottom y paddleHeight = bottomCollision
-  where 
     bottomCollision = y + paddleHeight >=  fromIntegral height / 2
 
+wallCollisionPaddleBottom :: Float -> Float -> Bool 
+wallCollisionPaddleBottom y paddleHeight = topCollision
+  where 
+    topCollision    = y - paddleHeight <= -fromIntegral height / 2
+
 -- | Given position and radius of the ball, return whether a collision occurred.
-wallCollision :: Position -> Radius -> Bool 
+wallCollision :: BallVelocity -> Radius -> Bool 
 wallCollision (_, y) radius = topCollision || bottomCollision
   where
     topCollision    = y - radius <= -fromIntegral height / 2 +12
@@ -194,7 +200,7 @@ wallBounce game = game { ballVel = (vx, vy') }
 
 
 
-paddleCollision :: Position -> Float -> Float -> Radius -> Bool 
+paddleCollision :: BallVelocity -> Float -> Float -> Radius -> Bool 
 paddleCollision (x, y) p1 p2 radius = leftCollision || rightCollision
   where
     leftCollision  = (x - radius <= -fromIntegral (width-80) / 2) && (y >= (p2 - 50)  && y <= (p2 + 50))
